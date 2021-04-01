@@ -1,66 +1,27 @@
-import { useCallback, useEffect, useState } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import ProductView from './components/ProductView';
+import ProductDetails from './components/ProductDetails';
+import CartPage from './components/CartPage';
+import CheckoutPage from './components/CheckoutPage';
+import PageNotFound from './components/PageNotFound';
+import Navbar from './navbar/Navbar';
 
 const App = () => {
 
-  let [ productData, setProductData ] = useState('')
-
-  const fetchData = useCallback(() => {
-    const base = 'https://fakestoreapi.com/products/'
-    const url = `${base}`
-
-    fetch(url)
-    .then(res=>res.json())
-    .then((response) => {
-      setProductData(response)
-    })
-    .catch((error)=> {
-      console.log(error)
-    })
-  }, [])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
-
-  const iterate = (data) => {
-    if (data) {
-      return data.map((info) => {
-        return <div 
-          style={{ 
-            display: "inline-block",
-            height: "auto", 
-            width: "20vw",
-            paddingBottom: "2em",
-            marginBottom: "8em",
-            border: "solid black 0.5em"
-          }}>
-          <div>{info.title}</div>
-          <div>{info.price}</div>
-          <div>{info.description}</div>
-          <img 
-            src={info.image} 
-            alt={''} 
-            style={{ 
-              display: "block",
-              maxHeight: "auto", 
-              maxWidth: "100%" 
-            }} 
-          />
-          <div>{info.category}</div>
-        </div>
-      })
-    } else {
-      console.log('not yet')
-    }
-  }
-
-
   return (
-    <div>
-      {
-        iterate(productData)
-      }
-    </div>
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Switch>
+          <Route path='/' exact component={ProductView} />
+          <Route path='/details/:id' component={ProductDetails} />
+          <Route path='/CartPage' component={CartPage} />
+          <Route path='/CheckoutPage' component={CheckoutPage} />
+          <Route component={PageNotFound} />
+        </Switch>
+      </BrowserRouter>
+    </>
   )
 }
 
