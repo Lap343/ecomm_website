@@ -1,39 +1,23 @@
-import { useEffect, useState, } from 'react';
+import { useContext } from 'react';
+import { CartContext, ProductContext } from '../App';
 
 const ProductDetails = ({ match }) => {
 
-    let [ productData, setProductData ] = useState('');
+    const products = useContext(ProductContext);
+    const { cart, setCart } = useContext(CartContext);
 
-    const fetchData = async () => {
-          const base = 'https://fakestoreapi.com/products'
-          const id = match.params.id
-          const url = `${base}/${id}`
-
-          await fetch(url)
-                .then(res=>res.json())
-                .then((response) => {
-                      setProductData(response)
-                })
-          .catch((error)=> {
-                console.log(error)
-          })
-    }
-
-    useEffect(() => {
-          fetchData()
-    }, [])
-
-    const itterate = (data) => {
+    const iterate = (data) => {
         if (data) {
-            console.log(data)
             return(
                 <div>
-                    <button>Add to cart</button>
-                    <div>{data.title}</div>
-                    <div>{data.price}</div>
-                    <div>{data.description}</div>
-                    <img src={data.image} alt='' />
-                    <div>{data.category}</div>
+                    <div>
+                        <div>{data.title}</div>
+                        <div>{data.price}</div>
+                        <div>{data.description}</div>
+                        <img src={data.image} alt='' />
+                        <div>{data.category}</div>
+                    </div>
+                    <button onClick={() => {setCart([...cart, data])}}>Add to cart</button>
                 </div>
             )
         } else {
@@ -43,10 +27,9 @@ const ProductDetails = ({ match }) => {
 
     return(
         <>
-            <div>Product#{match.params.id}</div>
-            <div>
-                {itterate(productData)}
-            </div>
+            <h1>Product#{parseInt(match.params.id)+1} detail page!</h1>
+            <div>{iterate(products[match.params.id])}</div>
+            <div>{console.log(cart)}</div>
         </>
     )
 }
